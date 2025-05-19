@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebWebcam: Use your webcam directly from a browser</title>
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+video {
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+    background-color: #4f5c9b;
+}
+
+#control-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#button-start.focus, #button-start:focus {
+    box-shadow: 0 0 0 .2rem rgba(72,180,97,.5);
+}
+
+#button-start {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+#button-stop.focus, #button-stop:focus {
+    box-shadow: 0 0 0 .2rem rgba(225,83,97,.5);
+}
+
+#button-stop {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+#button-start.disabled, #button-stop.disabled {
+    background-color: #666;
+    border-color: #555;
+}
+
+button {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    border-radius: .25rem;
+    border: 1px solid transparent;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: .375rem .75rem;
+    text-align: center;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    user-select: none;
+    vertical-align: middle;
+}
+</style>
+</head>
+
+<body>
+    <video id="video" class="fullHeight" autoplay></video>
+
+    <div id="control-panel">
+        <button id="button-stop"  class="disabled" disabled="true" onClick="stopCam()">Stop Cam</button>
+        <button id="button-start" class="disabled" disabled="true" onClick="startCam()">Start Cam</button>
+    </div>
+</div>
+
+<script>
+    const updateButtons = (obj) => {
+        const stop = document.getElementById('button-stop');
+        const start = document.getElementById('button-start');
+
+        if (obj) {
+            stop.classList.remove('disabled');
+            stop.disabled = false;
+            start.classList.add('disabled');
+            start.disabled = true;
+        } else {
+            stop.classList.add('disabled');
+            stop.disabled = true;
+            start.classList.remove('disabled');
+            start.disabled = false;
+        }
+    }
+
+    const stopCam = () => {
+        const video = document.getElementById('video');
+
+        if (!video.srcObject) return;
+
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+        video.srcObject = null;
+
+        updateButtons(video.srcObject);
+    };
+
+    const startCam = () => {
+        const start = document.getElementById('button-start');
+
+        // Prevent multiple clicks
+        start.disabled = true;
+        start.classList.add('disabled');
+
+        const video = document.getElementById('video');
+
+        if (video.srcObject) return;
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { width: { min: 1280, ideal: 1920, max: 2560 }, height: { min: 720, ideal: 1080, max: 1440 }} })
+                .then(stream => {
+                    video.srcObject = stream;
+                    updateButtons(video.srcObject);
+                })
+                .catch(error => {
+                    console.error("Something went wrong!", error);
+                    updateButtons(video.srcObject);
+                });
+        } else {
+            console.log("getUserMedia not supported on your browser!");
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        startCam();
+    });
+</script>
+
+</body>
+</html>
