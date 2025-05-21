@@ -385,9 +385,22 @@
         // await track.applyConstraints(C);
         // await track.applyConstraints(D);
         // await track.applyConstraints(E);
+        const settings = track.getSettings();
 
-        const C = { advanced: [{ exposureMode: "manual", focusMode: "manual", whiteBalanceMode: "manual" }] };
-        await track.applyConstraints(C);
+        for (const property of ['exposureMode', 'focusMode', 'whiteBalanceMode']) {
+            if (property in settings) {
+                const C = { advanced: [{ [property]: "manual" }] };
+                await track.applyConstraints(C);
+            }
+        }
+
+        // if ('exposureMode' in settings) {
+        //     const C = { advanced: [{ exposureMode: "manual" }] };
+        //     await track.applyConstraints(C);
+        // }
+
+        // const C = { advanced: [{ exposureMode: "manual", ocusMode: "manual", whiteBalanceMode: "manual" }] };
+        // await track.applyConstraints(C);
     };
 
     function loadProperties(refreshValuesOnly) {
