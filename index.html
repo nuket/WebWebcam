@@ -377,6 +377,19 @@
         }
     };
 
+    const setManual = async (track) => {
+        // updateControls(capabilities, settings);
+        // const C = { advanced: [{ exposureMode: "manual" }] };
+        // const D = { advanced: [{ focusMode: "manual" }] };
+        // const E = { advanced: [{ whiteBalanceMode: "manual" }] };
+        // await track.applyConstraints(C);
+        // await track.applyConstraints(D);
+        // await track.applyConstraints(E);
+
+        const C = { advanced: [{ exposureMode: "manual", focusMode: "manual", whiteBalanceMode: "manual" }] };
+        await track.applyConstraints(C);
+    };
+
     function loadProperties(refreshValuesOnly) {
         const track = window.track;
         const capabilities = track.getCapabilities();
@@ -385,12 +398,12 @@
         console.log('Settings: ', settings);
 
         // updateControls(capabilities, settings);
-        const C = { advanced: [{
-            exposureMode: "manual",
-            focusMode: "manual",
-            whiteBalanceMode: "manual"
-        }] };
-        track.applyConstraints(C);
+        // const C = { advanced: [
+        //     { exposureMode: "manual" },
+        //     { focusMode: "manual" },
+        //     { whiteBalanceMode: "manual" } ] };
+        // track.applyConstraints(C);
+        setManual(track);
 
         for (const property of ['exposureTime', 'brightness', 'contrast', 'saturation', 'sharpness', 'focusDistance', 'colorTemperature']) {
             // Check whether camera supports exposure.
@@ -428,6 +441,7 @@
                         await track.applyConstraints(constraints);
                         console.log('Did successfully apply new constraints: ', constraints);
                         console.log('New camera settings: ', track.getSettings());
+
                     } catch (err) {
                         console.error('applyConstraints() failed: ', err);
                     }
