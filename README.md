@@ -1,10 +1,10 @@
 # WebWebcam
 
-Preview the output from your webcam using modern browsers.
+Preview webcam output and control exposure settings using a modern browser.
 
-It also allows you to control exposure settings.
+## Rationale (🤦🏻‍♂️)
 
-I've written this because Microsoft's Camera App is a nightmare on Corporate PCs and
+I wrote this because Microsoft's Camera App is a nightmare on Corporate PCs and
 I wasted about an hour with a colleague trying to install it on a locked-down
 Windows machine.
 
@@ -33,18 +33,94 @@ C:\Program Files>cd WindowsApps
 Access is denied.
 ```
 
-I love it when an Operating System tells me that.
+I love it when an Operating System tells me that and hides things from me.
 
 Downloading the `Windows Camera Installer.exe` and then running it would take us
 back into either Internet Exploder (like I said, a corporate PC) or would simply
 open the Windows App Store webpage in Microsoft Edge.
 
-i.e. they made a 1MB executable do what an old `.url` shortcut would do.
+i.e. they made a 1MB executable do what an old `.url` shortcut would do. But hey,
+at least the executable is signed, right?
 
 Totally, completely, idiotic.
 
+## Settings
+
+Example from my system:
+
+```json
+{
+    "aspectRatio": {
+        "max": 2560,
+        "min": 0.0006944444444444445
+    },
+    "brightness": {
+        "max": 255,
+        "min": 0,
+        "step": 1
+    },
+    "colorTemperature": {
+        "max": 6500,
+        "min": 2800,
+        "step": 10
+    },
+    "contrast": {
+        "max": 100,
+        "min": 0,
+        "step": 1
+    },
+    "exposureMode": [
+        "continuous",
+        "manual"
+    ],
+    "exposureTime": {
+        "max": 1250,
+        "min": 2.44140625,
+        "step": 2.44140625
+    },
+    "facingMode": [
+        "user"
+    ],
+    "frameRate": {
+        "max": 30,
+        "min": 0
+    },
+    "height": {
+        "max": 1440,
+        "min": 1
+    },
+    "resizeMode": [
+        "none",
+        "crop-and-scale"
+    ],
+    "saturation": {
+        "max": 100,
+        "min": 0,
+        "step": 1
+    },
+    "sharpness": {
+        "max": 7,
+        "min": 0,
+        "step": 1
+    },
+    "whiteBalanceMode": [
+        "continuous",
+        "manual"
+    ],
+    "width": {
+        "max": 2560,
+        "min": 1
+    }
+}
+```
+
 ## Refs
+
+I used a combination of the following tutorials and help sites:
 
 * https://www.geeksforgeeks.org/how-to-integrate-webcam-using-javascript-on-html5/
 * https://googlechrome.github.io/samples/image-capture/update-camera-zoom.html
 * https://webrtc.github.io/samples/src/content/getusermedia/exposure/
+* https://github.com/webrtc/samples/blob/gh-pages/src/content/getusermedia/exposure/js/main.js
+
+Long may their links remain alive.

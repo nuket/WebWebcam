@@ -1,82 +1,269 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>WebWebcam: Use your webcam directly from a browser</title>
-<style>
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
+    <meta charset="utf-8">
+    <meta name="description" content="WebWebcam: Preview your webcam in a browser">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta itemprop="description" content="WebWebcam: Preview your webcam in a browser, no other app needed">
+    <!-- <meta itemprop="image" content="../../../images/icon-192x192.png"> -->
+    <meta itemprop="name" content="WebWebcam">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+    <title>WebWebcam: Preview your webcam in a browser</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-video {
-    height: 100%;
-    width: 100%;
-    flex-grow: 1;
-    background-color: #4f5c9b;
-}
+        video {
+            height: 100%;
+            width: 100%;
+            flex-grow: 1;
+            background-color: #4f5c9b;
+        }
 
-#control-panel {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-}
+        #control-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
 
-#button-start.focus, #button-start:focus {
-    box-shadow: 0 0 0 .2rem rgba(72,180,97,.5);
-}
+        #button-start.focus, #button-start:focus {
+            box-shadow: 0 0 0 .2rem rgba(72,180,97,.5);
+        }
 
-#button-start {
-    background-color: #28a745;
-    border-color: #28a745;
-}
+        #button-start {
+            color: #fff;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
 
-#button-stop.focus, #button-stop:focus {
-    box-shadow: 0 0 0 .2rem rgba(225,83,97,.5);
-}
+        #button-stop.focus, #button-stop:focus {
+            box-shadow: 0 0 0 .2rem rgba(225,83,97,.5);
+        }
 
-#button-stop {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
+        #button-stop {
+            color: #fff;
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
 
-#button-start.disabled, #button-stop.disabled {
-    background-color: #666;
-    border-color: #555;
-}
+        #button-start.disabled, #button-stop.disabled {
+            background-color: #666;
+            border-color: #555;
+        }
 
-button {
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    border-radius: .25rem;
-    border: 1px solid transparent;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    padding: .375rem .75rem;
-    text-align: center;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    user-select: none;
-    vertical-align: middle;
-}
-</style>
+        button {
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            border-radius: .25rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            padding: .375rem .75rem;
+            text-align: center;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            user-select: none;
+            vertical-align: middle;
+        }
+
+        label {
+            margin-bottom: 0.3rem;
+        }
+
+        input[type="range"] {
+            color: light-dark(rgb(16, 16, 16), rgb(255, 255, 255));
+            margin: 0px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+
+            background-color: #fff;
+            opacity: 0.6;
+            padding: .5rem 1rem;
+        }
+
+        #sliders {
+            border: 1px solid transparent;
+            padding-bottom: 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
     <video id="video" class="fullHeight" autoplay></video>
 
     <div id="control-panel">
-        <button id="button-stop"  class="disabled" disabled="true" onClick="stopCam()">Stop Cam</button>
-        <button id="button-start" class="disabled" disabled="true" onClick="startCam()">Start Cam</button>
+        <div id="sliders">
+            <div class="control">
+                <label for="exposure">Exposure</label>
+                <input id="exposure" name="exposureTime" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="brightness">Brightness</label>
+                <input id="brightness" name="brightness" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="contrast">Contrast</label>
+                <input id="contrast" name="contrast" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="saturation">Saturation</label>
+                <input id="saturation" name="saturation" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="sharpness">Sharpness</label>
+                <input id="sharpness" name="sharpness" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="focus">Focus</label>
+                <input id="focus" name="focusDistance" type="range" disabled>
+            </div>
+
+            <div class="control">
+                <label for="colorTemperature">White Balance</label>
+                <input id="colorTemperature" name="colorTemperature" type="range" disabled>
+            </div>
+        </div>
+
+        <div id="buttons">
+            <button id="button-stop"  class="disabled" disabled onClick="stopCam()">Stop Cam</button>
+            <button id="button-start">Start Cam</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // Ref:
+    // https://andi-siess.de/rgb-to-color-temperature/
+    const kelvin_table = {
+        "1000": "rgb(255, 56, 0)",
+        "1100": "rgb(255, 71, 0)",
+        "1200": "rgb(255, 83, 0)",
+        "1300": "rgb(255, 93, 0)",
+        "1400": "rgb(255, 101, 0)",
+        "1500": "rgb(255, 109, 0)",
+        "1600": "rgb(255, 115, 0)",
+        "1700": "rgb(255, 121, 0)",
+        "1800": "rgb(255, 126, 0)",
+        "1900": "rgb(255, 131, 0)",
+        "2000": "rgb(255, 138, 18)",
+        "2100": "rgb(255, 142, 33)",
+        "2200": "rgb(255, 147, 44)",
+        "2300": "rgb(255, 152, 54)",
+        "2400": "rgb(255, 157, 63)",
+        "2500": "rgb(255, 161, 72)",
+        "2600": "rgb(255, 165, 79)",
+        "2700": "rgb(255, 169, 87)",
+        "2800": "rgb(255, 173, 94)",
+        "2900": "rgb(255, 177, 101)",
+        "3000": "rgb(255, 180, 107)",
+        "3100": "rgb(255, 184, 114)",
+        "3200": "rgb(255, 187, 120)",
+        "3300": "rgb(255, 190, 126)",
+        "3400": "rgb(255, 193, 132)",
+        "3500": "rgb(255, 196, 137)",
+        "3600": "rgb(255, 199, 143)",
+        "3700": "rgb(255, 201, 148)",
+        "3800": "rgb(255, 204, 153)",
+        "3900": "rgb(255, 206, 159)",
+        "4000": "rgb(255, 209, 163)",
+        "4100": "rgb(255, 211, 168)",
+        "4200": "rgb(255, 213, 173)",
+        "4300": "rgb(255, 215, 177)",
+        "4400": "rgb(255, 217, 182)",
+        "4500": "rgb(255, 219, 186)",
+        "4600": "rgb(255, 221, 190)",
+        "4700": "rgb(255, 223, 194)",
+        "4800": "rgb(255, 225, 198)",
+        "4900": "rgb(255, 227, 202)",
+        "5000": "rgb(255, 228, 206)",
+        "5100": "rgb(255, 230, 210)",
+        "5200": "rgb(255, 232, 213)",
+        "5300": "rgb(255, 233, 217)",
+        "5400": "rgb(255, 235, 220)",
+        "5500": "rgb(255, 236, 224)",
+        "5600": "rgb(255, 238, 227)",
+        "5700": "rgb(255, 239, 230)",
+        "5800": "rgb(255, 240, 233)",
+        "5900": "rgb(255, 242, 236)",
+        "6000": "rgb(255, 243, 239)",
+        "6100": "rgb(255, 244, 242)",
+        "6200": "rgb(255, 245, 245)",
+        "6300": "rgb(255, 246, 247)",
+        "6400": "rgb(255, 248, 251)",
+        "6500": "rgb(255, 249, 253)",
+        "6600": "rgb(254, 249, 255)",
+        "6700": "rgb(252, 247, 255)",
+        "6800": "rgb(249, 246, 255)",
+        "6900": "rgb(247, 245, 255)",
+        "7000": "rgb(245, 243, 255)",
+        "7100": "rgb(243, 242, 255)",
+        "7200": "rgb(240, 241, 255)",
+        "7300": "rgb(239, 240, 255)",
+        "7400": "rgb(237, 239, 255)",
+        "7500": "rgb(235, 238, 255)",
+        "7600": "rgb(233, 237, 255)",
+        "7700": "rgb(231, 236, 255)",
+        "7800": "rgb(230, 235, 255)",
+        "7900": "rgb(228, 234, 255)",
+        "8000": "rgb(227, 233, 255)",
+        "8100": "rgb(225, 232, 255)",
+        "8200": "rgb(224, 231, 255)",
+        "8300": "rgb(222, 230, 255)",
+        "8400": "rgb(221, 230, 255)",
+        "8500": "rgb(220, 229, 255)",
+        "8600": "rgb(218, 229, 255)",
+        "8700": "rgb(217, 227, 255)",
+        "8800": "rgb(216, 227, 255)",
+        "8900": "rgb(215, 226, 255)",
+        "9000": "rgb(214, 225, 255)",
+        "9100": "rgb(212, 225, 255)",
+        "9200": "rgb(211, 224, 255)",
+        "9300": "rgb(210, 223, 255)",
+        "9400": "rgb(209, 223, 255)",
+        "9500": "rgb(208, 222, 255)",
+        "9600": "rgb(207, 221, 255)",
+        "9700": "rgb(207, 221, 255)",
+        "9800": "rgb(206, 220, 255)",
+        "9900": "rgb(205, 220, 255)",
+        "10000": "rgb(207, 218, 255)",
+        "10100": "rgb(207, 218, 255)",
+        "10200": "rgb(206, 217, 255)",
+        "10300": "rgb(205, 217, 255)",
+        "10400": "rgb(204, 216, 255)",
+        "10500": "rgb(204, 216, 255)",
+        "10600": "rgb(203, 215, 255)",
+        "10700": "rgb(202, 215, 255)",
+        "10800": "rgb(202, 214, 255)",
+        "10900": "rgb(201, 214, 255)",
+        "11000": "rgb(200, 213, 255)",
+        "11100": "rgb(200, 213, 255)",
+        "11200": "rgb(199, 212, 255)",
+        "11300": "rgb(198, 212, 255)",
+        "11400": "rgb(198, 212, 255)",
+        "11500": "rgb(197, 211, 255)",
+        "11600": "rgb(197, 211, 255)",
+        "11700": "rgb(197, 210, 255)",
+        "11800": "rgb(196, 210, 255)",
+        "11900": "rgb(195, 210, 255)",
+        "12000": "rgb(195, 209, 255)"
+    };
+
     const updateButtons = (obj) => {
         const stop = document.getElementById('button-stop');
         const start = document.getElementById('button-start');
@@ -107,35 +294,179 @@ button {
         updateButtons(video.srcObject);
     };
 
-    const startCam = () => {
-        const start = document.getElementById('button-start');
+    // const startCam = () => {
+    //     const start = document.getElementById('button-start');
 
-        // Prevent multiple clicks
-        start.disabled = true;
-        start.classList.add('disabled');
+    //     // Prevent multiple clicks
+    //     start.disabled = true;
+    //     start.classList.add('disabled');
 
-        const video = document.getElementById('video');
+    //     const video = document.getElementById('video');
 
-        if (video.srcObject) return;
+    //     if (video.srcObject) return;
 
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: { width: { min: 1280, ideal: 1920, max: 2560 }, height: { min: 720, ideal: 1080, max: 1440 }} })
-                .then(stream => {
-                    video.srcObject = stream;
-                    updateButtons(video.srcObject);
-                })
-                .catch(error => {
-                    console.error("Something went wrong!", error);
-                    updateButtons(video.srcObject);
-                });
-        } else {
-            console.log("getUserMedia not supported on your browser!");
+    //     if (navigator.mediaDevices.getUserMedia) {
+    //         navigator.mediaDevices.getUserMedia({ video: { width: { min: 1280, ideal: 1920, max: 2560 }, height: { min: 720, ideal: 1080, max: 1440 }} })
+    //         .then(stream => {
+    //             video.srcObject = stream;
+    //             updateButtons(video.srcObject);
+    //         })
+    //         .catch(error => {
+    //             console.error("Something went wrong!", error);
+    //             updateButtons(video.srcObject);
+    //         });
+    //     } else {
+    //         console.log("getUserMedia not supported on your browser!");
+    //     }
+    // };
+
+    const updateWb = (lut, start, stop, e) => {
+        var usable = [];
+
+        for (; start <= stop; start += 100) {
+            if (lut[start]) usable.push(lut[start]);
+        }
+
+        const gradient = `background: linear-gradient(90deg, ${usable.join(", ")});`;
+        console.log(gradient);
+
+        // Set the gradient on the element
+        e.style = gradient;
+    }
+
+    /*
+    *  Copyright (c) 2022 The WebRTC project authors. All Rights Reserved.
+    *
+    *  Use of this source code is governed by a BSD-style license
+    *  that can be found in the LICENSE file in the root of the source
+    *  tree.
+    */
+    'use strict';
+
+    // Put variables in global scope to make them available to the browser console.
+    const constraints = window.constraints = {
+        audio: false,
+        video: {
+            width: { min: 1280, ideal: 1920, max: 2560 },
+            height: { min: 720, ideal: 1080, max: 1440 }
         }
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
-        startCam();
-    });
+    function handleSuccess(stream) {
+        const video = document.querySelector('video');
+        const videoTracks = stream.getVideoTracks();
+        console.log('Got stream with constraints:', constraints);
+        console.log(`Using video device: ${videoTracks[0].label}`);
+        video.srcObject = stream;
+
+        // make track variable available to browser console.
+        [window.track] = stream.getVideoTracks();
+
+        loadProperties();
+    }
+
+    // Takes the settings object and enables / disables various sliders
+    // and controls.
+    const updateControls = (capabilities, settings) => {
+        if ('exposureMode' in settings) {
+            if (settings['exposureMode'] == 'continuous') {
+
+            } else if (settings['exposureMode'] == 'manual') {
+
+            }
+        }
+    };
+
+    function loadProperties(refreshValuesOnly) {
+        const track = window.track;
+        const capabilities = track.getCapabilities();
+        const settings = track.getSettings();
+        console.log('Capabilities: ', capabilities);
+        console.log('Settings: ', settings);
+
+        // updateControls(capabilities, settings);
+        const C = { advanced: [{
+            exposureMode: "manual",
+            focusMode: "manual",
+            whiteBalanceMode: "manual"
+        }] };
+        track.applyConstraints(C);
+
+        for (const property of ['exposureTime', 'brightness', 'contrast', 'saturation', 'sharpness', 'focusDistance', 'colorTemperature']) {
+            // Check whether camera supports exposure.
+            if (!(property in settings)) {
+                errorMsg(`Camera does not support ${property}.`);
+                continue;
+            }
+
+            let element;
+
+            if (Array.isArray(capabilities[property])) {
+                // Map it to a select element.
+                const select = document.querySelector(`select[name=${property}]`);
+                element = select;
+                if (capabilities[property] && !refreshValuesOnly) {
+                    for (const mode of capabilities[property]) {
+                        select.insertAdjacentHTML('afterbegin', `<option value="${mode}">${mode}</option>`);
+                    }
+                }
+            } else {
+                // Map it to a slider element.
+                const input = document.querySelector(`input[name=${property}]`);
+                element = input;
+                input.min = capabilities[property].min;
+                input.max = capabilities[property].max;
+                input.step = capabilities[property].step;
+            }
+
+            element.value = settings[property];
+            element.disabled = false;
+            if (!refreshValuesOnly) {
+                element.oninput = async event => {
+                    try {
+                        const constraints = {advanced: [{[property]: element.value}]};
+                        await track.applyConstraints(constraints);
+                        console.log('Did successfully apply new constraints: ', constraints);
+                        console.log('New camera settings: ', track.getSettings());
+                    } catch (err) {
+                        console.error('applyConstraints() failed: ', err);
+                    }
+                };
+            }
+        }
+    }
+
+    function handleError(error) {
+        if (error.name === 'NotAllowedError') {
+            errorMsg('Permissions have not been granted to use your camera, ' +
+            'you need to allow the page access to your devices in ' +
+            'order for the demo to work.');
+        }
+        errorMsg(`getUserMedia error: ${error.name}`, error);
+    }
+
+    function errorMsg(msg, error) {
+        if (typeof error !== 'undefined') {
+            console.error(error);
+        }
+    }
+
+    async function init(e) {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            updateButtons(stream);
+            handleSuccess(stream);
+            e.target.disabled = true;
+        } catch (e) {
+            handleError(e);
+        }
+    }
+
+    // document.addEventListener("DOMContentLoaded", () => {
+    //     updateWb(kelvin_table, 2800, 6500, document.getElementById('manual-wb'));
+    // });
+
+    document.querySelector('#button-start').addEventListener('click', e => init(e));
 </script>
 
 </body>
